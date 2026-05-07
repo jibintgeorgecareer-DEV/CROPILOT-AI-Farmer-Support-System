@@ -94,6 +94,9 @@ CROPPILOT_FULL_PROJECT/
 * Mobile application support
 
 ---
+⚙️ Installation 
+The frameworks tensorflow and keras not supported for python 3.14 ,So i created virtual environment for 
+python 3.10 with venv
 
 # 👨‍💻 Developed By
 
