@@ -2,7 +2,7 @@
 
 ### Smarter Soil, Healthier Crops, Expert Support
 
-Cropilot is an AI-powered agriculture web application developed to help farmers with crop disease detection, soil recommendations, market price insights, and agriculture officer support.
+Cropilot is an AI-powered agriculture web application developed to help farmers with crop disease detection, soil recommendations, market price insights, and agriculture officer support and CHATBOT system.
 
 The system uses Deep Learning and Image Classification techniques to identify crop diseases from uploaded images and provide treatment suggestions, symptoms, and impact analysis.
 
@@ -16,7 +16,7 @@ Cropilot currently supports:
 * Potato disease detection
 * Tomato disease detection
 
-These are two models (cocoa_disease.h5 & potato_tomato.h5) trained on my laptop with tensorflow & Keras.
+There are two models (cocoa_disease.h5 & potato_tomato.h5) trained on my laptop with tensorflow & Keras.
 The image datasets are from Kaggle.
 
 The system uses:
