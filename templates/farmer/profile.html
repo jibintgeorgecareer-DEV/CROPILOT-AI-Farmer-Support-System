@@ -1,0 +1,820 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>CROPILOT - My Profile</title>
+  <meta name="description" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/favicon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    /* -----------------------------------------------
+       Profile Page – scoped styles only
+       Uses main.css variables & Bootstrap utilities
+    ----------------------------------------------- */
+
+    /* Page hero banner */
+    /* Force header background to white always — even before scrolling */
+.header {
+  --background-color: #ffffff !important;
+}
+    .profile-hero {
+      background: linear-gradient(135deg,
+          color-mix(in srgb, var(--accent-color), transparent 10%) 0%,
+          color-mix(in srgb, var(--heading-color), transparent 15%) 100%);
+      padding: 120px 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .profile-hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Avatar */
+    .profile-avatar-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .profile-avatar {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #ffffff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+
+    .profile-avatar-placeholder {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--accent-color), transparent 80%);
+      border: 5px solid #ffffff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      color: var(--accent-color);
+    }
+
+    .profile-verified-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 4px;
+      background: #28a745;
+      color: #fff;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      border: 3px solid #fff;
+    }
+
+    .profile-hero h1 {
+      color: #ffffff;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .profile-hero .profile-meta {
+      color: rgba(255,255,255,0.80);
+      font-size: 0.95rem;
+    }
+
+    .profile-hero .profile-meta i {
+      color: rgba(255,255,255,0.70);
+      margin-right: 4px;
+    }
+
+    /* Quick stats bar */
+    .profile-stats-bar {
+      background: var(--surface-color);
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 20px 30px;
+      margin-top: -36px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .profile-stats-bar .stat-item {
+      text-align: center;
+      padding: 8px 16px;
+    }
+
+    .profile-stats-bar .stat-item + .stat-item {
+      border-left: 1px solid color-mix(in srgb, var(--default-color), transparent 85%);
+    }
+
+    .profile-stats-bar .stat-number {
+      font-family: var(--heading-font);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      line-height: 1;
+    }
+
+    .profile-stats-bar .stat-label {
+      font-size: 0.78rem;
+      color: color-mix(in srgb, var(--default-color), transparent 30%);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    /* Section card */
+    .profile-card {
+      background: var(--surface-color);
+      border-radius: 14px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      padding: 28px 32px;
+      height: 100%;
+    }
+
+    .profile-card-title {
+      font-family: var(--heading-font);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--heading-color);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid color-mix(in srgb, var(--accent-color), transparent 80%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .profile-card-title i {
+      color: var(--accent-color);
+      font-size: 1.1rem;
+    }
+
+    /* Info rows */
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 92%);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-row .info-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--accent-color), transparent 88%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent-color);
+      font-size: 0.95rem;
+    }
+
+    .info-row .info-body {
+      flex: 1;
+    }
+
+    .info-row .info-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: color-mix(in srgb, var(--default-color), transparent 40%);
+      margin-bottom: 1px;
+    }
+
+    .info-row .info-value {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--heading-color);
+    }
+
+    /* Crop badges */
+    .crop-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: color-mix(in srgb, var(--accent-color), transparent 88%);
+      color: var(--accent-color);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin: 4px;
+      transition: 0.25s;
+    }
+
+    .crop-badge:hover {
+      background: var(--accent-color);
+      color: var(--contrast-color);
+    }
+
+    .crop-badge i {
+      font-size: 0.9rem;
+    }
+
+    /* Disease report mini-list */
+    .report-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 92%);
+    }
+
+    .report-item:last-child { border-bottom: none; }
+
+    .report-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: color-mix(in srgb, #e74c3c, transparent 85%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e74c3c;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .report-title {
+      font-weight: 600;
+      color: var(--heading-color);
+      font-size: 0.92rem;
+    }
+
+    .report-date {
+      font-size: 0.75rem;
+      color: color-mix(in srgb, var(--default-color), transparent 40%);
+    }
+
+    .report-status {
+      margin-left: auto;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .report-status.resolved {
+      background: color-mix(in srgb, #28a745, transparent 85%);
+      color: #28a745;
+    }
+
+    .report-status.pending {
+      background: color-mix(in srgb, #ffc107, transparent 80%);
+      color: #b07d00;
+    }
+
+    /* Edit button */
+    .btn-edit-profile {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.7);
+      color: #fff;
+      border-radius: 25px;
+      padding: 7px 22px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-edit-profile:hover {
+      background: #fff;
+      color: var(--accent-color);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 28px 16px;
+      color: color-mix(in srgb, var(--default-color), transparent 45%);
+    }
+
+    .empty-state i {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      display: block;
+      color: color-mix(in srgb, var(--accent-color), transparent 60%);
+    }
+
+    @media (max-width: 767px) {
+      .profile-stats-bar .stat-item + .stat-item {
+        border-left: none;
+        border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 85%);
+      }
+
+      .profile-card {
+        padding: 20px 18px;
+      }
+    }
+    
+  </style>
+
+</head>
+
+<body class="index-page">
+
+  <!-- ============ HEADER (same as dashboard) ============ -->
+  <header id="header" class="header fixed-top">
+    <div class="branding d-flex align-items-center">
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'farmer_dashboard' %}" class="logo d-flex align-items-center">
+          <img src="{% static 'assets/img/favicon.png' %}" alt="">
+          <h1 class="sitename">Cropilot</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'farmer_dashboard' %}" class="active">Home</a></li>
+            <li><a href="{% url 'disease_detection' %}">Disease Detection</a></li>
+            <li><a href="{% url 'smart_soil' %}">Soil Recommendation</a></li>
+            <li><a href="{% url 'send_query' %}">Agri-Officers</a></li>
+            <li><a href="{% url 'farmer_market_prices' %}">Market Price</a></li>
+            <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="{% url 'submit_feedback' %}">Write Feedback</a></li>
+              <li><a href="{% url 'farmer_replies' %}">Officer Replies</a></li>
+              <li><a href="{% url 'farmer_crops' %}">Your Crops</a></li>
+              <li><a href="{% url 'all_results' %}">Disease Results</a></li>
+              <li><a href="{% url 'farmer_profile' %}">Profile</a></li>
+              <li><a href="/logout/">Log Out</a></li>
+            </ul>
+            </li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <!-- /Header -->
+
+  <main class="main">
+
+    <!-- ============ PROFILE HERO ============ -->
+    <section class="profile-hero">
+      <div class="container profile-hero-content">
+        <div class="row align-items-center g-4">
+
+          <!-- Avatar + name -->
+          <div class="col-auto" data-aos="fade-right" data-aos-delay="100">
+            <div class="profile-avatar-wrapper">
+              {% if user.farmer.profile %}
+                <img src="{{ user.farmer.profile.url }}" alt="Profile Pic" class="profile-avatar">
+              {% else %}
+                <div class="profile-avatar-placeholder">
+                  <img src="{% static 'assets/img/farmer.jpg' %}" alt="{{ user.username }}" class="profile-avatar">
+                </div>
+              {% endif %}
+              <div class="profile-verified-badge" title="Verified Farmer">
+                <i class="bi bi-check-lg"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="col" data-aos="fade-right" data-aos-delay="200">
+            <h1 class="mb-1">{{ user.username }}</h1>
+            <div class="profile-meta d-flex flex-wrap gap-3 mt-2">
+              <span><i class="bi bi-envelope-fill"></i>{{ user.email }}</span>
+              {% if user.farmer.region %}
+                <span><i class="bi bi-geo-alt-fill"></i>{{ user.farmer.region }}</span>
+              {% endif %}
+              {% if user.farmer.address %}
+                <span><i class="bi bi-house-fill"></i>{{ user.farmer.address }}</span>
+              {% endif %}
+              <span><i class="bi bi-calendar3"></i>Member since {{ user.date_joined|date:"M Y" }}</span>
+            </div>
+          </div>
+
+          <!-- Edit button -->
+          <div class="col-auto" data-aos="fade-left" data-aos-delay="300">
+            <a href="{% url 'edit_profile' %}" class="btn-edit-profile">
+              <i class="bi bi-pencil-square me-1"></i> Edit Profile
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <!-- /Profile Hero -->
+
+    <!-- ============ QUICK STATS BAR ============ -->
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="profile-stats-bar">
+        <div class="row g-0 text-center">
+
+          <div class="col-6 col-md-3">
+            <div class="stat-item">
+              <div class="stat-number">{{ crop_count|default:"0" }}</div>
+              <div class="stat-label">Crops</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <div class="stat-item">
+              <div class="stat-number">{{ report_count|default:"0" }}</div>
+              <div class="stat-label">Disease Reports</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <div class="stat-item">
+              <div class="stat-number">{{ query_count|default:"0" }}</div>
+              <div class="stat-label">Queries Sent</div>
+            </div>
+          </div>
+
+          <div class="col-6 col-md-3">
+            <div class="stat-item">
+              <div class="stat-number">{{ reply_count|default:"0" }}</div>
+              <div class="stat-label">Officer Replies</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- /Quick Stats Bar -->
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <section class="section py-5">
+      <div class="container">
+        <div class="row g-4">
+
+          <!-- LEFT: Personal Info -->
+          <div class="col-lg-4" data-aos="fade-right" data-aos-delay="100">
+            <div class="profile-card">
+              <div class="profile-card-title">
+                <i class="bi bi-person-lines-fill"></i> Personal Information
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-person-fill"></i></div>
+                <div class="info-body">
+                  <div class="info-label">Full Name</div>
+                  <div class="info-value">{{ user.username|default:"Not set" }}</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-at"></i></div>
+                <div class="info-body">
+                  <div class="info-label">Username</div>
+                  <div class="info-value">{{ user.username }}</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-envelope-fill"></i></div>
+                <div class="info-body">
+                  <div class="info-label">Email</div>
+                  <div class="info-value">{{ user.email|default:"Not provided" }}</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-telephone-fill"></i></div>
+                <div class="info-body">
+                  <div class="info-label">Phone</div>
+                  <div class="info-value">{{ user.farmer.phone|default:"Not provided" }}</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-calendar-check-fill"></i></div>
+                <div class="info-body">
+                  <div class="info-label">Member Since</div>
+                  <div class="info-value">{{ user.date_joined|date:"F d, Y" }}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- MIDDLE: Location & Farm Details -->
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="150">
+            <div class="profile-card">
+              <div class="profile-card-title">
+                <i class="bi bi-geo-alt-fill"></i> Farm & Location
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-house-fill"></i></div>
+                <div class="info-body">
+                  <div class="info-label">Address</div>
+                  <div class="info-value">Thodupuzha</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-pin-map-fill"></i></div>
+                <div class="info-body">
+                  <div class="info-label">Region / District</div>
+                  <div class="info-value">{{ user.farmer.region|default:"Not provided" }}</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-map-fill"></i></div>
+                <div class="info-body">
+                  <div class="info-label">State</div>
+                  <div class="info-value">{{ farmer.state|default:"Kerala" }}</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-bounding-box-circles"></i></div>
+                <div class="info-body">
+                  <div class="info-label">Farm Area</div>
+                  <div class="info-value">{{ farmer.farm_area|default:"2 acare" }}</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-icon"><i class="bi bi-droplet-fill"></i></div>
+                <div class="info-body">
+                  <div class="info-label">Irrigation Type</div>
+                  <div class="info-value">{{ farmer.irrigation_type|default:"Not provided" }}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- RIGHT: Crops -->
+          <div class="col-lg-4" data-aos="fade-left" data-aos-delay="200">
+            <div class="profile-card">
+              <div class="profile-card-title">
+                <i class="bi bi-flower1"></i> My Crops
+              </div>
+
+              {% if crop %}
+                <div class="mb-2">
+                  {% for c in crop %}
+                    <span class="crop-badge">
+                      <i class="bi bi-tree-fill"></i> {{ c.name }}
+                    </span>
+                  {% endfor %}
+                </div>
+                <a href="{% url 'farmer_crops' %}" class="btn btn-sm btn-outline-primary mt-3 w-100">
+                  <i class="bi bi-eye me-1"></i> View All Crops
+                </a>
+              {% else %}
+                <div class="empty-state">
+                  <i class="bi bi-tree"></i>
+                  <p class="mb-0">No crops added yet.</p>
+                  <a href="{% url 'farmer_crops' %}" class="btn btn-sm btn-primary mt-3">
+                    <i class="bi bi-plus-circle me-1"></i> Add Crops
+                  </a>
+                </div>
+              {% endif %}
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ============ DISEASE REPORTS ============ -->
+        <div class="row g-4 mt-1">
+
+          <div class="col-lg-8" data-aos="fade-right" data-aos-delay="100">
+            <div class="profile-card">
+              <div class="profile-card-title">
+                <i class="bi bi-clipboard2-pulse-fill"></i> Recent Disease Reports
+              </div>
+
+              {% if report %}
+                {% for r in report|slice:":5" %}
+                  <div class="report-item">
+                    <div class="report-icon">
+                      <i class="bi bi-bug-fill"></i>
+                    </div>
+                    <div>
+                      <div class="report-title">{{ r.detected_disease|default:"Unknown Disease" }}</div>
+                      <div class="report-date">
+                        <i class="bi bi-calendar3 me-1"></i>{{ r.created_at|date:"M d, Y" }}
+                        &nbsp;·&nbsp; Crop: {{ r.crop_name|default:"N/A" }}
+                      </div>
+                    </div>
+                    <span class="report-status {% if report.is_resolved %}resolved{% else %}pending{% endif %}">
+                      {% if r.is_resolved %}Resolved{% else %}Pending{% endif %}
+                    </span>
+                  </div>
+                {% endfor %}
+
+                <a href="{% url 'all_results' %}" class="btn btn-sm btn-outline-primary mt-3">
+                  <i class="bi bi-arrow-right me-1"></i> View All Reports
+                </a>
+              {% else %}
+                <div class="empty-state">
+                  <i class="bi bi-clipboard2-check"></i>
+                  <p class="mb-0">No disease reports found. Your crops look healthy!</p>
+                  <a href="{% url 'disease_detection' %}" class="btn btn-sm btn-primary mt-3">
+                    <i class="bi bi-camera me-1"></i> Scan a Plant
+                  </a>
+                </div>
+              {% endif %}
+
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="col-lg-4" data-aos="fade-left" data-aos-delay="150">
+            <div class="profile-card">
+              <div class="profile-card-title">
+                <i class="bi bi-lightning-charge-fill"></i> Quick Actions
+              </div>
+
+              <div class="d-grid gap-2">
+                <a href="{% url 'disease_detection' %}" class="btn btn-primary">
+                  <i class="bi bi-camera-fill me-2"></i> Detect Disease
+                </a>
+                <a href="{% url 'smart_soil' %}" class="btn btn-outline-primary">
+                  <i class="bi bi-layers-fill me-2"></i> Soil Recommendation
+                </a>
+                <a href="{% url 'send_query' %}" class="btn btn-outline-primary">
+                  <i class="bi bi-chat-dots-fill me-2"></i> Contact Officer
+                </a>
+                <a href="{% url 'farmer_market_prices' %}" class="btn btn-outline-primary">
+                  <i class="bi bi-graph-up me-2"></i> Market Prices
+                </a>
+                <a href="{% url 'farmer_replies' %}" class="btn btn-outline-secondary">
+                  <i class="bi bi-reply-fill me-2"></i> Officer Replies
+                </a>
+                <a href="/logout/" class="btn btn-outline-danger">
+                  <i class="bi bi-box-arrow-right me-2"></i> Log Out
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <!-- /Disease Reports row -->
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="footer" class="footer-16 footer position-relative">
+    <div class="container">
+      <div class="footer-main" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-start">
+
+          <div class="col-lg-5">
+            <div class="brand-section">
+              <a href="{% url 'farmer_dashboard' %}" class="logo d-flex align-items-center mb-4">
+                <span class="sitename">Cropilot</span>
+              </a>
+              <p class="brand-description">This is my final-year BCA project.</p>
+              <div class="contact-info mt-5">
+                <div class="contact-item">
+                  <i class="bi bi-person"></i>
+                  <span>Jibin T George</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-github"></i>
+                  <span>https://github.com/jibintgeorgecareer-DEV</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-linkedin"></i>
+                  <span>www.linkedin.com/in/jibintgeorge</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="footer-nav-wrapper">
+              <div class="row">
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Studio</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Our Story</a>
+                      <a href="#!">Design Process</a>
+                      <a href="#!">Portfolio</a>
+                      <a href="#!">Case Studies</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Services</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Brand Identity</a>
+                      <a href="#!">Web Design</a>
+                      <a href="#!">Mobile Apps</a>
+                      <a href="#!">Digital Strategy</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Resources</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Design Blog</a>
+                      <a href="#!">Style Guide</a>
+                      <a href="#!">Free Assets</a>
+                      <a href="#!">Tutorials</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Connect</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Start Project</a>
+                      <a href="#!">Schedule Call</a>
+                      <a href="#!">Join Newsletter</a>
+                      <a href="#!">Partnership</a>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="bottom-content" data-aos="fade-up" data-aos-delay="300">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="legal-links">
+                <a href="#!">Privacy Policy</a>
+                <a href="#!">Terms of Service</a>
+                <a href="#!">Cookie Policy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#!" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+  </a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

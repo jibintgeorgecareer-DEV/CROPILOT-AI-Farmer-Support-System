@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3 class="mb-4">Officer Dashboard</h3>
+
+<!-- ================= DISEASE REPORTS ================= -->
+<h5>Disease Reports</h5>
+<table class="table table-bordered">
+<tr>
+  <th>Farmer</th>
+  <th>Crop</th>
+  <th>Disease</th>
+  <th>Status</th>
+  <th>Action</th>
+</tr>
+
+{% for r in reports %}
+<tr>
+  <td>{{ r.farmer.user.username }}</td>
+  <td>{{ r.crop_name }}</td>
+  <td>{{ r.detected_disease }}</td>
+  <td>
+    {% if r.verified_by_officer %}
+      <span class="badge bg-success">Verified</span>
+    {% else %}
+      <span class="badge bg-warning">Pending</span>
+    {% endif %}
+  </td>
+  <td>
+    {% if not r.verified_by_officer %}
+      <a href="/officer/verify-disease/{{ r.id }}/"
+         class="btn btn-sm btn-success">
+         Verify
+      </a>
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}
+</table>
+
+<hr>
+
+<!-- ================= FARMER QUERIES ================= -->
+<h5>Farmer Queries</h5>
+<table class="table table-bordered">
+<tr>
+  <th>Farmer</th>
+  <th>Question</th>
+  <th>Status</th>
+  <th>Action</th>
+</tr>
+
+{% for q in queries %}
+<tr>
+  <td>{{ q.farmer.user.username }}</td>
+  <td>{{ q.question }}</td>
+  <td>
+    {% if q.replied %}
+      <span class="badge bg-success">Replied</span>
+    {% else %}
+      <span class="badge bg-danger">Pending</span>
+    {% endif %}
+  </td>
+  <td>
+    {% if not q.replied %}
+      <a href="/officer/reply-query/{{ q.id }}/"
+         class="btn btn-sm btn-primary">
+         Reply
+      </a>
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}
+</table>
+
+<hr>
+
+<!-- ================= FEEDBACK ================= -->
+<h5>Farmer Feedback</h5>
+<table class="table table-bordered">
+<tr>
+  <th>Farmer</th>
+  <th>Feedback</th>
+  <th>Date</th>
+</tr>
+
+{% for f in feedbacks %}
+<tr>
+  <td>{{ f.farmer.user.username }}</td>
+  <td>{{ f.message }}</td>
+  <td>{{ f.created_at }}</td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

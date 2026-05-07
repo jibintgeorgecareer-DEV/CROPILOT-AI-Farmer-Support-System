@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h4>Reply to Farmer Query</h4>
+
+<p><strong>Question:</strong> {{ query.question }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  <textarea name="reply"
+            class="form-control mb-2"
+            placeholder="Enter reply"
+            required></textarea>
+
+  <button class="btn btn-primary">
+    Send Reply
+  </button>
+</form>
+
+{% endblock %}

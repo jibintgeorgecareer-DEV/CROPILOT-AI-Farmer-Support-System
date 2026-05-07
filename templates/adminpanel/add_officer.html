@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+.glass-card{
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.25);
+  box-shadow: 0 15px 35px rgba(0,0,0,.25);
+}
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold">
+    <i class="fas fa-user-tie"></i> Manage Agriculture Officers
+  </h4>
+
+  <!-- ADD OFFICER BUTTON -->
+  <button class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#addOfficerModal">
+    <i class="fas fa-user-plus"></i> Add Officer
+  </button>
+</div>
+
+<!-- OFFICER TABLE -->
+<div class="glass-card p-4">
+<table class="table table-bordered table-striped align-middle">
+  <thead class="table-dark">
+    <tr>
+      <th>#</th>
+      <th>Username</th>
+      <th>Region</th>
+      <th>Qualification</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for o in officers %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ o.user.username }}</td>
+      <td>{{ o.region }}</td>
+      <td>{{ o.qualification }}</td>
+      <td>
+        <a href="/adminpanel/officer/edit/{{ o.id }}/"
+           class="btn btn-sm btn-warning">
+           <i class="fas fa-edit"></i>
+        </a>
+
+        <a href="/adminpanel/officer/delete/{{ o.id }}/"
+           class="btn btn-sm btn-danger"
+           onclick="return confirm('Are you sure you want to delete this officer?');">
+           <i class="fas fa-trash"></i>
+        </a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5" class="text-center text-muted">
+        No officers found
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<!-- ================= ADD OFFICER MODAL ================= -->
+<div class="modal fade" id="addOfficerModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <form method="post" action="/adminpanel/add-officer/">
+        {% csrf_token %}
+
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">
+            <i class="fas fa-user-plus"></i> Add Agriculture Officer
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <input name="username"
+                 class="form-control mb-2"
+                 placeholder="Username"
+                 required>
+
+          <input type="password"
+                 name="password"
+                 class="form-control mb-2"
+                 placeholder="Password"
+                 required>
+
+          <input name="region"
+                 class="form-control mb-2"
+                 placeholder="Region"
+                 required>
+
+          <input name="qualification"
+                 class="form-control mb-2"
+                 placeholder="Qualification"
+                 required>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">
+            Create Officer
+          </button>
+          <button type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,448 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>CROPILOT - Dashboard</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/favicon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="index-page">
+{% include 'farmer/chatbot.html' %}
+
+  <header id="header" class="header fixed-top">
+
+    <div class="branding d-flex align-items-cente">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'farmer_dashboard' %}" class="logo d-flex align-items-center">
+          <!-- Uncomment the line below if you also wish to use an image logo -->
+           <img src="{% static 'assets/img/favicon.png' %}" alt="">
+          <h1 class="sitename">Cropilot</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'farmer_dashboard' %}" class="active">Home</a></li>
+            <li><a href="{% url 'disease_detection' %}">Disease Detection</a></li>
+            <li><a href="{% url 'smart_soil' %}">Soil Recommendation</a></li>
+            <li><a href="{% url 'send_query' %}">Agri-Officers</a></li>
+            <li><a href="{% url 'farmer_market_prices' %}">Market Price</a></li>
+            <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="{% url 'submit_feedback' %}">Write Feedback</a></li>
+              <li><a href="{% url 'farmer_replies' %}">Officer Replies</a></li>
+              <li><a href="{% url 'farmer_crops' %}">Your Crops</a></li>
+              <li><a href="{% url 'all_results' %}">Disease Results</a></li>
+              <li><a href="{% url 'farmer_profile' %}">Profile</a></li>
+              <li><a href="{% url 'chatbot_page' %}">ChatBot</a></li>
+              <li><a href="/logout/">Log Out</a></li>
+            </ul>
+            </li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <div class="hero-content">
+              
+
+
+              <h1 data-aos="fade-right" data-aos-delay="300">
+                 <span class="highlight">Cropilot AI</span> - The farmer support system
+              </h1>
+
+                  <p class="hero-description" data-aos="fade-right" data-aos-delay="400">
+                      Hello {{ user.username }}, shall we scan your plants for possible issues?
+                  </p>
+
+              <div class="hero-stats mb-4" data-aos="fade-right" data-aos-delay="500">
+                <div class="stat-item">
+                  <h3><span data-purecounter-start="0" data-purecounter-end="{{ reports|length }}" data-purecounter-duration="2"
+                      class="purecounter"></span></h3>
+                  <p>Disease Reports</p>
+                </div>
+                <div class="stat-item">
+                  <h3><span data-purecounter-start="0" data-purecounter-end="{{ crops|length }}" data-purecounter-duration="2"
+                      class="purecounter"></span></h3>
+                  <p>Your Crops</p>
+                </div>
+              </div>
+
+              <div class="hero-actions" data-aos="fade-right" data-aos-delay="600">
+                <a href="{% url 'disease_detection' %}" class="btn btn-primary">Find Plant Disease</a>
+                <a href="" class="btn btn-outline glightbox">
+                  Connect with Officer
+                </a>
+              </div>
+
+              
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="hero-visual" data-aos="fade-left" data-aos-delay="400">
+              <div class="main-image">
+                <img src="{% static 'assets/img/AI_plant_analyzing.jpg' %}" alt="Plant scanning" class="img-fluid">
+                
+                <div class="floating-card rating-card">
+                  <div class="card-content">
+                    
+                    <h6>Check Your Crop’s Health</h6>
+                    <small>with CROPILOT</small>
+                  </div>
+                </div>
+              </div>
+              <div class="background-elements">
+                <div class="element element-1"></div>
+                <div class="element element-2"></div>
+                <div class="element element-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- Home About Section -->
+    <section id="home-about" class="home-about section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row align-items-center">
+          <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
+            <div class="about-content">
+              <h2 class="section-heading">Connecting Farmers with Agricultural Expertise</h2>
+              <p class="lead-text">We bring together smart crop solutions and officer‑backed expertise to help farmers grow healthier, more productive fields.</p>
+
+              <p>Farmers and agriculture officers work hand‑in‑hand to ensure every crop receives the right guidance. 
+                From early disease detection to sustainable practices, 
+                we combine modern technology with trusted officer support.</p>
+
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <div class="stat-number purecounter" data-purecounter-start="0" data-purecounter-end="1000"
+                    data-purecounter-duration="1"></div>
+                  <div class="stat-label">Regional Officers</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number purecounter" data-purecounter-start="0" data-purecounter-end="1200"
+                    data-purecounter-duration="1"></div>
+                  <div class="stat-label">Offices</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number purecounter" data-purecounter-start="0" data-purecounter-end="3"
+                    data-purecounter-duration="1"></div>
+                  <div class="stat-label">Major Departments</div>
+                </div>
+              </div>
+
+              <div class="cta-section">
+                <a href="{% url 'send_query' %}" class="btn-primary">Connect with officer</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+            <div class="about-visual">
+              <div class="main-image">
+                <img src="{% static 'assets/img/officer3.jpg' %}" alt="Modern medical facility" class="img-fluid">
+              </div>
+              <div class="floating-card">
+                <div class="card-content">
+                  <div class="icon">
+                    <i class="bi bi-chat-dots"></i>
+                  </div>
+                  <div class="card-text">
+                    <h4>Easy Connect with Agri-officers</h4>
+                  </div>
+                </div>
+              </div>
+              <div class="experience-badge">
+                <div class="badge-content">
+                  <span class="years">1200+</span>
+                  <span class="text">Officers in Kerala</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Home About Section -->
+
+    
+
+    <!-- Featured Services Section -->
+    <section id="featured-services" class="featured-services section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Market Data</h2>
+        <p>Up‑to‑date prices for every farmer</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row g-0">
+
+          <div class="col-lg-8" data-aos="fade-right" data-aos-delay="200">
+            <div class="featured-service-main">
+              <div class="service-image-wrapper">
+                <img src="{% static 'assets/img/money_crop2.jpg' %}" alt="Premier Healthcare Services" class="img-fluid"
+                  loading="lazy">
+                <div class="service-overlay">
+                  <div class="service-badge">
+                    <i class="bi bi-graph-up"></i>
+                    <span>Analyze Crop Prices</span>
+                  </div>
+                </div>
+              </div>
+              <div class="service-details">
+                <h2>Comprehensive Crop Market Insights</h2>
+                <p>Delivering comprehensive crop market excellence with reliable price data, 
+                  clear analysis, and trusted insights that empower 
+                  farmers to make confident decisions and strengthen their connection to the marketplace.</p>
+                <a href="{% url 'farmer_market_prices' %}" class="main-cta">Explore Our Services</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4" data-aos="fade-left" data-aos-delay="300">
+            <div class="services-sidebar">
+
+              <div class="service-item" data-aos="fade-up" data-aos-delay="400">
+                <div class="service-icon-wrapper">
+                  <i class="bi bi-capsule"></i>
+                </div>
+                <div class="service-info">
+                  <h4>Latest Crop Prices</h4>
+                  <p>Stay informed with the latest crop prices updated in real time, giving you a reliable view 
+                    of the market so you can plan sales, purchases, and investments with confidence.</p>
+                  <a href="{% url 'farmer_market_prices' %}" class="service-link">Learn More</a>
+                </div>
+              </div>
+
+              <div class="service-item" data-aos="fade-up" data-aos-delay="500">
+                <div class="service-icon-wrapper">
+                  <i class="bi bi-bandaid"></i>
+                </div>
+                <div class="service-info">
+                  <h4>Search & Filter</h4>
+                  <p>Quickly search and filter through crop price data so you can find the exact information you need,
+                     compare different crops, and focus only on what matters most to your farm.</p>
+                  <a href="{% url 'farmer_market_prices' %}" class="service-link">Learn More</a>
+                </div>
+              </div>
+
+              <div class="service-item" data-aos="fade-up" data-aos-delay="600">
+                <div class="service-icon-wrapper">
+                  <i class="bi bi-activity"></i>
+                </div>
+                <div class="service-info">
+                  <h4>Easy Analyze</h4>
+                  <p>Easily analyze crop market trends with clear insights that help you 
+                    understand price movements and make smarter farming decisions without any 
+                    complexity.</p>
+                  <a href="{% url 'farmer_market_prices' %}" class="service-link">Learn More</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- /Featured Services Section -->
+
+    
+
+    
+
+  </main>
+
+  <!--footer   ----------------------------------------------------------------------->
+  <footer id="footer" class="footer-16 footer position-relative">
+
+    <div class="container">
+
+      <div class="footer-main" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-start">
+
+          <div class="col-lg-5">
+            <div class="brand-section">
+              <a href="index.html" class="logo d-flex align-items-center mb-4">
+                <span class="sitename">Cropilot</span>
+              </a>
+              <p class="brand-description">This is my final-year BCA project.</p>
+
+              <div class="contact-info mt-5">
+                <div class="contact-item">
+                  <i class="bi bi-person"></i>
+                  <span>Jibin T George</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-github"></i>
+                  <span>https://github.com/jibintgeorgecareer-DEV</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-linkedin"></i>
+                  <span>www.linkedin.com/in/jibintgeorge</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="footer-nav-wrapper">
+              <div class="row">
+
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Studio</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Our Story</a>
+                      <a href="#!">Design Process</a>
+                      <a href="#!">Portfolio</a>
+                      <a href="#!">Case Studies</a>
+                      <a href="#!">Awards</a>
+                    </nav>
+                  </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Services</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Brand Identity</a>
+                      <a href="#!">Web Design</a>
+                      <a href="#!">Mobile Apps</a>
+                      <a href="#!">Digital Strategy</a>
+                      <a href="#!">Consultation</a>
+                    </nav>
+                  </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Resources</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Design Blog</a>
+                      <a href="#!">Style Guide</a>
+                      <a href="#!">Free Assets</a>
+                      <a href="#!">Tutorials</a>
+                      <a href="#!">Inspiration</a>
+                    </nav>
+                  </div>
+                </div>
+
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Connect</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Start Project</a>
+                      <a href="#!">Schedule Call</a>
+                      <a href="#!">Join Newsletter</a>
+                      <a href="#!">Follow Updates</a>
+                      <a href="#!">Partnership</a>
+                    </nav>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="bottom-content" data-aos="fade-up" data-aos-delay="300">
+          <div class="row align-items-center">
+
+            <div class="col-lg-6">
+              <div class="legal-links">
+                <a href="#!">Privacy Policy</a>
+                <a href="#!">Terms of Service</a>
+                <a href="#!">Cookie Policy</a>
+                <div class="credits">
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+
+
+  <!-- Scroll Top -->
+  <a href="#!" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader 
+  <div id="preloader"></div> -->
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

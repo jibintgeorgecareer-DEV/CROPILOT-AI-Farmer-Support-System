@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+/* HEADER */
+.page-header{
+  background: linear-gradient(120deg,#2d6a4f,#40916c);
+  border-radius: 18px;
+  padding: 25px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+/* GLASS CARD */
+.glass-card{
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.25);
+  box-shadow: 0 15px 40px rgba(0,0,0,.35);
+}
+
+/* TABLE */
+.table thead{
+  background: rgba(45,106,79,.95);
+  color: white;
+}
+
+.table tbody tr{
+  transition: .3s;
+}
+
+.table tbody tr:hover{
+  background: rgba(45,106,79,.08);
+}
+</style>
+
+<!-- HEADER -->
+<div class="page-header mb-4 d-flex justify-content-between align-items-center">
+  <h3 class="fw-bold mb-0">
+    <i class="fas fa-seedling"></i> Crop Management
+  </h3>
+  <button class="btn btn-light btn-sm fw-semibold"
+          data-bs-toggle="modal"
+          data-bs-target="#addCropModal">
+    <i class="fas fa-plus"></i> Add Crop
+  </button>
+</div>
+
+<!-- TABLE -->
+<div class="glass-card p-4">
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Crop Name</th>
+          <th>Suitable Soil</th>
+          <th>Season</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in crops %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ c.name }}</td>
+          <td>{{ c.suitable_soil }}</td>
+          <td>{{ c.season }}</td>
+          <td>
+            <span class="badge bg-success">Active</span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">
+            No crop records available
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ================= ADD CROP MODAL ================= -->
+<div class="modal fade" id="addCropModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <form method="post" action="/adminpanel/crops/">
+        {% csrf_token %}
+
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">
+            <i class="fas fa-seedling"></i> Add New Crop
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input name="name"
+                 class="form-control mb-2"
+                 placeholder="Crop Name"
+                 required>
+
+          <input name="suitable_soil"
+                 class="form-control mb-2"
+                 placeholder="Suitable Soil"
+                 required>
+
+          <input name="season"
+                 class="form-control mb-2"
+                 placeholder="Season"
+                 required>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-success">
+            Save Crop
+          </button>
+          <button type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

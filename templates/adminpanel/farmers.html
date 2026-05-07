@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+/* PAGE HEADER */
+.page-header{
+  background: linear-gradient(120deg,#0f5132,#198754);
+  border-radius: 18px;
+  padding: 25px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+/* GLASS TABLE CARD */
+.glass-card{
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.25);
+  box-shadow: 0 15px 40px rgba(0,0,0,.35);
+}
+
+/* TABLE */
+.table thead{
+  background: rgba(25,135,84,.9);
+  color: white;
+}
+
+.table tbody tr{
+  transition: .3s;
+}
+
+.table tbody tr:hover{
+  background: rgba(25,135,84,.08);
+}
+</style>
+
+<!-- HEADER -->
+<div class="page-header mb-4 d-flex justify-content-between align-items-center">
+  <h3 class="fw-bold mb-0">
+    <i class="fas fa-users"></i> Registered Farmers
+  </h3>
+  <span class="badge bg-light text-dark fs-6">
+    Total: {{ farmers|length }}
+  </span>
+</div>
+
+<!-- TABLE -->
+<div class="glass-card p-4">
+
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Username</th>
+          <th>Region</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for f in farmers %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>
+            <i class="fas fa-user text-success"></i>
+            {{ f.user.username }}
+          </td>
+          <td>{{ f.region }}</td>
+          <td>
+            <span class="badge bg-success">
+              Active
+            </span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center text-muted">
+            No farmers registered yet
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+{% endblock %}

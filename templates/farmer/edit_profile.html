@@ -1,0 +1,344 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Cropilot - Edit Profile</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/favicon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="contact-page">
+
+  <header id="header" class="header fixed-top">
+
+    <div class="branding d-flex align-items-cente">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'farmer_dashboard' %}" class="logo d-flex align-items-center">
+          <img src="{% static 'assets/img/favicon.png' %}" alt="">
+          <h1 class="sitename">Cropilot</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'farmer_dashboard' %}">Home</a></li>
+            <li><a href="{% url 'disease_detection' %}">Disease Detection</a></li>
+            <li><a href="{% url 'smart_soil' %}">Soil Recommendation</a></li>
+            <li><a href="{% url 'send_query' %}">Agri-Officers</a></li>
+            <li><a href="{% url 'farmer_market_prices' %}">Market Price</a></li>
+            <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="{% url 'submit_feedback' %}">Write Feedback</a></li>
+                <li><a href="{% url 'farmer_replies' %}">Officer Replies</a></li>
+                <li><a href="{% url 'farmer_crops' %}">View Crops</a></li>
+                <li><a href="{% url 'all_results' %}">Disease Results</a></li>
+                <li><a href="{% url 'farmer_profile' %}" class="active">Profile</a></li>
+                <li><a href="/logout/">Log Out</a></li>
+              </ul>
+            </li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title">
+      <div class="heading">
+        <div class="container">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1 class="heading-title">Edit Profile</h1>
+              <p class="mb-0">
+                Update your personal details to keep your Cropilot profile accurate and up to date.
+                Changes to your name, contact, and location help us connect you with the right agricultural resources.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="{% url 'farmer_dashboard' %}">Home</a></li>
+            <li><a href="{% url 'farmer_profile' %}">Profile</a></li>
+            <li class="current">Edit Profile</li>
+          </ol>
+        </div>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <!-- Edit Profile Section -->
+    <section id="contact" class="contact section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row g-5">
+
+          <!-- Left Info Panel -->
+          <div class="col-lg-5">
+            <div class="contact-info-wrapper">
+
+              <div class="contact-info-item" data-aos="fade-up" data-aos-delay="100">
+                <div class="info-icon">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="info-content">
+                  <h3>Personal Info</h3>
+                  <p>Update your name, email, and password</p>
+                </div>
+              </div>
+
+              <div class="contact-info-item" data-aos="fade-up" data-aos-delay="200">
+                <div class="info-icon">
+                  <i class="bi bi-telephone"></i>
+                </div>
+                <div class="info-content">
+                  <h3>Contact Details</h3>
+                  <p>Keep your phone number current for officer communication</p>
+                </div>
+              </div>
+
+              <div class="contact-info-item" data-aos="fade-up" data-aos-delay="300">
+                <div class="info-icon">
+                  <i class="bi bi-geo-alt"></i>
+                </div>
+                <div class="info-content">
+                  <h3>Location & Address</h3>
+                  <p>Set your region and address for local crop support</p>
+                </div>
+              </div>
+
+              <div class="contact-info-item" data-aos="fade-up" data-aos-delay="400">
+                <div class="info-icon">
+                  <i class="bi bi-image"></i>
+                </div>
+                <div class="info-content">
+                  <h3>Profile Picture</h3>
+                  <p>Upload a photo to personalise your account</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+<script>
+function fun()
+{
+    alert("Profile Edited");
+}
+</script>
+          <!-- Right Form Panel -->
+          <div class="col-lg-7">
+            <div class="contact-form-card" data-aos="fade-up" data-aos-delay="200">
+              <h2>Update Your Details,</h2>
+              <p class="mb-4">Fill in the fields below to edit your profile information.</p>
+
+              <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row gy-4">
+
+                  <div class="col-12">
+                    Name<input type="text" class="form-control" name="name"
+                      placeholder="{{ user.username }}" />
+                  </div>
+
+                  <div class="col-12">
+                    Email<input type="email" class="form-control" name="email"
+                      placeholder="{{ user.email }}" />
+                  </div>
+
+                  <div class="col-12">
+                    Password<input type="text" class="form-control" name="password"
+                      placeholder="New Password (leave blank to keep current)" />
+                  </div>
+
+                  <div class="col-12">
+                    Phone<input type="number" class="form-control" name="phone"
+                      placeholder="{{ user.farmer.phone }}" />
+                  </div>
+
+                  <div class="col-12">
+                    Region<input type="text" class="form-control" name="region"
+                      placeholder="{{ user.farmer.region }}" />
+                  </div>
+
+                  <div class="col-12">
+                    Address<input type="text" class="form-control" name="address"
+                      placeholder="{{ user.farmer.address }}" />
+                  </div>
+
+                  <div class="col-12">
+                    Profile Pic<input type="file" class="form-control" name="profile_pic" accept="image/*" />
+                  </div>
+
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-submit" onclick="fun()">Save Changes</button>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section><!-- /Edit Profile Section -->
+
+  </main>
+
+  <!-- Footer -->
+  <footer id="footer" class="footer-16 footer position-relative">
+    <div class="container">
+      <div class="footer-main" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-start">
+
+          <div class="col-lg-5">
+            <div class="brand-section">
+              <a href="index.html" class="logo d-flex align-items-center mb-4">
+                <span class="sitename">Cropilot</span>
+              </a>
+              <p class="brand-description">This is my final-year BCA project.</p>
+              <div class="contact-info mt-5">
+                <div class="contact-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>Jibin T George</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-github"></i>
+                  <span>https://github.com/jibintgeorgecareer-DEV</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-linkedin"></i>
+                  <span>www.linkedin.com/in/jibintgeorge</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="footer-nav-wrapper">
+              <div class="row">
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Studio</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Our Story</a>
+                      <a href="#!">Design Process</a>
+                      <a href="#!">Portfolio</a>
+                      <a href="#!">Case Studies</a>
+                      <a href="#!">Awards</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Services</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Brand Identity</a>
+                      <a href="#!">Web Design</a>
+                      <a href="#!">Mobile Apps</a>
+                      <a href="#!">Digital Strategy</a>
+                      <a href="#!">Consultation</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Resources</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Design Blog</a>
+                      <a href="#!">Style Guide</a>
+                      <a href="#!">Free Assets</a>
+                      <a href="#!">Tutorials</a>
+                      <a href="#!">Inspiration</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Connect</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Start Project</a>
+                      <a href="#!">Schedule Call</a>
+                      <a href="#!">Join Newsletter</a>
+                      <a href="#!">Follow Updates</a>
+                      <a href="#!">Partnership</a>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="bottom-content" data-aos="fade-up" data-aos-delay="300">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="legal-links">
+                <a href="#!">Privacy Policy</a>
+                <a href="#!">Terms of Service</a>
+                <a href="#!">Cookie Policy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#!" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

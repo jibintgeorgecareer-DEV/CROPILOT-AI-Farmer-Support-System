@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h4>Verify Disease</h4>
+
+<p><strong>Crop:</strong> {{ report.crop_name }}</p>
+<p><strong>Disease:</strong> {{ report.detected_disease }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  <textarea name="treatment"
+            class="form-control mb-2"
+            placeholder="Enter treatment advice"
+            required></textarea>
+
+  <button class="btn btn-success">
+    Verify & Save
+  </button>
+</form>
+
+{% endblock %}

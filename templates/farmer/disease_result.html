@@ -1,0 +1,513 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Cropilot - Disease Detection Result</title>
+  <meta name="description" content="AI-powered Disease Detection Result">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/favicon.png' %}" rel="apple-touch-icon">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <!-- Minimal extras -->
+  <style>
+    /* ── Confidence bar ── */
+    .confidence-bar-wrap {
+      background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+      border-radius: 50px;
+      height: 10px;
+      overflow: hidden;
+      margin: 1rem 0 0.5rem;
+    }
+    .confidence-bar-fill {
+      height: 100%;
+      border-radius: 50px;
+      background-color: var(--accent-color);
+      width: 0%;
+      transition: width 1.4s cubic-bezier(.22,.61,.36,1);
+    }
+    .confidence-meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: color-mix(in srgb, var(--default-color), transparent 50%);
+    }
+    .confidence-score-num {
+      font-size: 3.5rem;
+      font-weight: 300;
+      color: var(--accent-color);
+      font-family: var(--heading-font);
+      line-height: 1;
+    }
+    .confidence-score-num small {
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: color-mix(in srgb, var(--default-color), transparent 50%);
+    }
+
+    /* ── Result pills ── */
+    .result-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.35rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      margin-right: 6px;
+      margin-top: 6px;
+    }
+    .result-pill-success { background-color: #e8f8ef; color: #1e7e34; }
+    .result-pill-warning { background-color: #fff3e0; color: #c97010; }
+
+    /* ── Disclaimer ── */
+    .disclaimer-box {
+      background-color: #fff8e1;
+      border: 1px solid #ffcc80;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.875rem;
+      color: #7a5c00;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      margin-top: 1rem;
+    }
+    .disclaimer-box i { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; color: #e07b39; }
+
+    /* ── Sidebar stat rows ── */
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 92%);
+      font-size: 0.9rem;
+    }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-row .stat-label { color: color-mix(in srgb, var(--default-color), transparent 40%); }
+    .stat-row .stat-val { font-weight: 500; color: var(--heading-color); font-family: var(--heading-font); font-size: 0.85rem; }
+    .stat-row .stat-val-warning { color: #c97010; }
+    .stat-row .stat-val-success { color: #1e7e34; }
+
+    /* ── Sidebar wrapper card ── */
+    .result-sidebar-card {
+      background: var(--surface-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px color-mix(in srgb, var(--default-color), transparent 94%);
+    }
+    .result-sidebar-card h5 {
+      font-family: var(--heading-font);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--heading-color);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid color-mix(in srgb, var(--accent-color), transparent 80%);
+    }
+
+    /* ── Severity inline badge ── */
+    .severity-inline {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background-color: #fff3e0;
+      border: 1px solid #ffd08a;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+    }
+    .severity-inline .sev-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: color-mix(in srgb, var(--default-color), transparent 45%); display: block; }
+    .severity-inline .sev-value { font-family: var(--heading-font); font-weight: 600; font-size: 1rem; color: #c97010; }
+
+    /* ── Disease result gradient card ── */
+    .disease-result-card {
+      background: linear-gradient(135deg, var(--heading-color), var(--accent-color));
+      border-radius: 12px;
+      padding: 2rem 2.5rem;
+      color: #fff;
+      margin-bottom: 1.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .disease-result-card::after {
+      content: '\F309';
+      font-family: 'Bootstrap Icons';
+      position: absolute;
+      right: -10px; top: -10px;
+      font-size: 130px;
+      opacity: 0.06;
+      line-height: 1;
+    }
+    .disease-result-card .dr-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 0.5rem; }
+    .disease-result-card .dr-name { font-family: var(--heading-font); font-size: 2rem; font-weight: 600; color: #fff; margin-bottom: 0.35rem; line-height: 1.2; }
+    .disease-result-card .dr-meta { color: rgba(255,255,255,0.7); font-size: 0.875rem; margin-bottom: 1rem; }
+    .disease-result-card .dr-desc { color: rgba(255,255,255,0.82); font-size: 0.95rem; line-height: 1.7; margin: 0; }
+    .disease-result-card .dr-icon {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      float: right; margin-top: -6px;
+    }
+
+    /* ── Insight item cards ── */
+    .insight-card-item {
+      background: var(--surface-color);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 0.85rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .insight-card-item:hover { transform: translateY(-2px); box-shadow: 0 8px 25px color-mix(in srgb, var(--accent-color), transparent 88%); }
+    .insight-card-item:last-child { margin-bottom: 0; }
+    .insight-card-item .ic-icon { width: 44px; height: 44px; min-width: 44px; background-color: color-mix(in srgb, var(--accent-color), transparent 88%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--accent-color); }
+    .insight-card-item .ic-body h6 { font-family: var(--heading-font); font-size: 0.9rem; font-weight: 600; color: var(--heading-color); margin-bottom: 0.3rem; }
+    .insight-card-item .ic-body p { font-size: 0.875rem; color: color-mix(in srgb, var(--default-color), transparent 25%); margin: 0; line-height: 1.6; }
+
+    /* ── Overview card wrapper ── */
+    .result-overview-card {
+      background: var(--surface-color);
+      border-radius: 12px;
+      padding: 2rem 2.5rem;
+      border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+      margin-bottom: 1.75rem;
+      box-shadow: 0 4px 25px color-mix(in srgb, var(--default-color), transparent 92%);
+    }
+
+    /* ── Section sub-label ── */
+    .result-section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: color-mix(in srgb, var(--default-color), transparent 45%); margin-bottom: 0.4rem; }
+
+    /* ── Insights tinted wrapper ── */
+    .insights-wrapper {
+      background-color: color-mix(in srgb, var(--accent-color), transparent 96%);
+      border: 1px solid color-mix(in srgb, var(--accent-color), transparent 82%);
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+    }
+
+    /* ── Numbered step dot (treatment) ── */
+    .step-dot {
+      min-width: 36px; height: 36px; width: 36px;
+      background-color: color-mix(in srgb, var(--accent-color), transparent 88%);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--heading-font);
+      font-weight: 700;
+      color: var(--accent-color);
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+
+<body class="department-details-page">
+
+  <!-- HEADER remains unchanged -->
+  <header id="header" class="header fixed-top">
+    <div class="branding d-flex align-items-center">
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'farmer_dashboard' %}" class="logo d-flex align-items-center">
+          <img src="{% static 'assets/img/favicon.png' %}" alt="">
+          <h1 class="sitename">Cropilot</h1>
+        </a>
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'farmer_dashboard' %}" class="active">Home</a></li>
+            <li><a href="{% url 'disease_detection' %}">Disease Detection</a></li>
+            <li><a href="{% url 'smart_soil' %}">Soil Recommendation</a></li>
+            <li><a href="{% url 'send_query' %}">Agri-Officers</a></li>
+            <li><a href="{% url 'farmer_market_prices' %}">Market Price</a></li>
+            <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="{% url 'submit_feedback' %}">Write Feedback</a></li>
+              <li><a href="{% url 'farmer_replies' %}">Officer Replies</a></li>
+              <li><a href="{% url 'farmer_crops' %}">Your Crops</a></li>
+              <li><a href="">Disease Results</a></li>
+              <li><a href="{% url 'farmer_profile' %}">Profile</a></li>
+              <li><a href="/logout/">Log Out</a></li>
+            </ul>
+            </li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- PAGE TITLE remains unchanged -->
+    <div class="page-title">
+      <div class="heading">
+        <div class="container">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1>Disease Detection Result</h1>
+              <p class="mb-0">
+                Your AI-powered diagnostic analysis is complete. Review the detected condition, model confidence level, and personalized treatment recommendations below.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="{% url 'farmer_dashboard' %}">Home</a></li>
+            <li class="current">Detection Result</li>
+          </ol>
+        </div>
+      </nav>
+    </div>
+
+
+    
+
+    <!-- MAIN RESULT SECTION - CENTERED -->
+    <section id="department-details" class="department-details section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row justify-content-center">   <!-- Changed here -->
+
+          
+
+          <!-- CENTERED MAIN COLUMN -->
+          <div class="col-lg-10">   <!-- Kept col-lg-8 for good readability, but now centered -->
+{% for result in predictions %}
+            <!-- 2. Detected Disease -->
+            <div class="disease-result-card" data-aos="fade-up" data-aos-delay="200">
+              <div class="dr-icon"><i class="bi bi-virus"></i></div>
+              <div class="dr-label">Detected Disease</div>
+              <div class="dr-name">{{ result.disease }}</div>
+              <div class="dr-meta"><h4 style="color: white;">Impact:</h4> {{ result.impact }}</div>
+              <p class="dr-desc">
+                <h4 style="color: white;">Symptoms:</h4> {{ result.symptoms }}
+              </p>
+            </div>
+
+            <!-- 4. Recommended Treatment -->
+            <div class="result-overview-card" data-aos="fade-up" data-aos-delay="300">
+              <div class="result-section-label"><i class="bi bi-prescription me-1"></i>Treatment</div>
+              <h3 style="font-family:var(--heading-font); font-size:1.25rem; font-weight:500; margin-bottom:0.25rem; color:var(--heading-color);">Recommended Treatment Plan</h3>
+              <p style="color:color-mix(in srgb, var(--default-color), transparent 35%); font-size:0.9rem; margin-bottom:1.75rem;">
+                {{ result.treatment }}
+            </div>
+
+            <!-- 3. Confidence Score -->
+            <div class="result-overview-card" data-aos="fade-up" data-aos-delay="250">
+              <div class="result-section-label"><i class="bi bi-graph-up-arrow me-1"></i>Model Confidence</div>
+              <h3 style="font-family:var(--heading-font); font-size:1.25rem; font-weight:500; margin-bottom:0.25rem; color:var(--heading-color);">Confidence Score</h3>
+              <p style="color:color-mix(in srgb, var(--default-color), transparent 35%); font-size:0.9rem; margin-bottom:1.25rem;">
+                How certain the AI model is about this diagnosis based on your submitted data patterns.
+              </p>
+              <div class="confidence-score-num">{{ result.confidence }}<small>%</small></div>
+              <div class="confidence-bar-wrap">
+                <div class="confidence-bar-fill" id="confBar"></div>
+              </div>
+              <div class="confidence-meta-row">
+                <span>Low (0%)</span>
+                <span>Moderate (50%)</span>
+                <span>High (100%)</span>
+              </div>
+            </div>
+
+            <!-- 1. Overview -->
+            <div class="result-overview-card" data-aos="fade-up" data-aos-delay="150">
+              <div class="department-hero" style="padding:0;">
+                <div class="badge-wrap">
+                  <span class="specialty-badge"><i class="bi bi-cpu me-1"></i>AI Diagnosis Report</span>
+                </div>
+                <h1 class="department-title">Disease Detection Report</h1>
+                <p class="department-intro">
+                  Our {{ model }} model analyzed your plant image and generated the following detection report. It highlights the identified disease, confidence level, and suggested care steps for your crop.
+                <div class="key-highlights">
+                  <div class="highlight-item">
+                    <span class="highlight-number">{{ result.confidence }}</span>
+                    <span class="highlight-text">Model Confidence</span>
+                  </div>
+                  <div class="highlight-item">
+                    <span class="highlight-number">{{ result.model_time }}</span>
+                    <span class="highlight-text">Analysis Time</span>
+                  </div>
+                  <div class="highlight-item">
+                    <span class="highlight-number">v1.0</span>
+                    <span class="highlight-text">Model Version</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+
+            
+
+          </div><!-- /col-lg-8 -->
+
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </section>
+
+  </main>
+
+  <!-- FOOTER remains unchanged -->
+  <footer id="footer" class="footer-16 footer position-relative">
+    <!-- ... (footer content unchanged) ... -->
+    <div class="container">
+      <div class="footer-main" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-start">
+
+          <div class="col-lg-5">
+            <div class="brand-section">
+              <a href="index.html" class="logo d-flex align-items-center mb-4">
+                <span class="sitename">Cropilot</span>
+              </a>
+              <p class="brand-description">This is my final-year BCA project.</p>
+              <div class="contact-info mt-5">
+                <div class="contact-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>Jibin T George</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-github"></i>
+                  <span>https://github.com/jibintgeorgecareer-DEV</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-linkedin"></i>
+                  <span>www.linkedin.com/in/jibintgeorge</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="footer-nav-wrapper">
+              <div class="row">
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Studio</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Our Story</a>
+                      <a href="#!">Design Process</a>
+                      <a href="#!">Portfolio</a>
+                      <a href="#!">Case Studies</a>
+                      <a href="#!">Awards</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Services</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Brand Identity</a>
+                      <a href="#!">Web Design</a>
+                      <a href="#!">Mobile Apps</a>
+                      <a href="#!">Digital Strategy</a>
+                      <a href="#!">Consultation</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Resources</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Design Blog</a>
+                      <a href="#!">Style Guide</a>
+                      <a href="#!">Free Assets</a>
+                      <a href="#!">Tutorials</a>
+                      <a href="#!">Inspiration</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Connect</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Start Project</a>
+                      <a href="#!">Schedule Call</a>
+                      <a href="#!">Join Newsletter</a>
+                      <a href="#!">Follow Updates</a>
+                      <a href="#!">Partnership</a>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="bottom-content" data-aos="fade-up" data-aos-delay="300">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="legal-links">
+                <a href="#!">Privacy Policy</a>
+                <a href="#!">Terms of Service</a>
+                <a href="#!">Cookie Policy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#!" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div> 
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <!-- Confidence bar animation -->
+  <script>
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        var bar = document.getElementById('confBar');
+        if (bar) bar.style.width = "{{ result.confidence }}% ";
+      }, 800);
+    });
+  </script>
+{% endfor %}
+</body>
+</html>

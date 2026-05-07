@@ -1,0 +1,298 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Login - Cropilot</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/favicon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    /* ── Login button override ── */
+    .btn-book {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-book:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-book:active {
+      transform: translateY(0);
+    }
+
+    /* ── Tagline & helper text ── */
+    .login-tagline {
+      font-size: 1rem;
+      color: #6c757d;
+      margin-top: 0.35rem;
+      margin-bottom: 0;
+    }
+
+    .login-subtext {
+      font-size: 0.82rem;
+      color: #9aa0a8;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .login-subtext a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #495057;
+      margin-bottom: 0.4rem;
+    }
+  </style>
+
+</head>
+
+<body class="appointment-page">
+
+  <header id="header" class="header fixed-top">
+    <div class="branding d-flex align-items-cente">
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+          <img src="{% static 'assets/img/favicon.png' %}" alt="">
+          <h1 class="sitename">Cropilot</h1>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+{% if error %}
+<script>
+      alert("Invalid username or password");
+  </script>
+{% endif %}
+
+    <!-- Login Section -->
+    <section id="appointmnet" class="appointmnet section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <div class="booking-wrapper">
+
+              <div class="booking-header text-center" data-aos="fade-up" data-aos-delay="200">
+                <h2>Welcome Back 🌱</h2>
+                <p class="login-tagline">Your fields are waiting. Let's make today a great harvest.</p>
+              </div>
+
+              <div class="appointment-form" data-aos="fade-up" data-aos-delay="400">
+                <form action="{% url 'login' %}" method="post" class="">
+                {% csrf_token %}
+                  <div class="row gy-4">
+
+                    <div class="col-md-12">
+                      <label class="field-label" for="username">Full Name</label>
+                      <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="form-control"
+                        placeholder="e.g. Jibin T George"
+                        required="">
+                    </div>
+
+                    <div class="col-md-12">
+                      <label class="field-label" for="password">Password</label>
+                      <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Enter your password"
+                        required="">
+                    </div>
+
+                    <div class="col-12">
+                     
+                      <button type="submit" class="btn-book">
+                        Sign In to Cropilot
+                      </button>
+                      <p class="login-subtext">
+                        Don't have an account? <a href="{% url 'farmer_register' %}">Create one — it's free.</a>
+                      </p>
+                    </div>
+
+                  </div>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!--footer-->
+  <footer id="footer" class="footer-16 footer position-relative">
+    <div class="container">
+      <div class="footer-main" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-start">
+
+          <div class="col-lg-5">
+            <div class="brand-section">
+              <a href="{% url 'home' %}" class="logo d-flex align-items-center mb-4">
+                <span class="sitename">Cropilot</span>
+              </a>
+              <p class="brand-description">This is my final-year BCA project.</p>
+              <div class="contact-info mt-5">
+                <div class="contact-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>Jibin T George</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-github"></i>
+                  <span>https://github.com/jibintgeorgecareer-DEV</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-linkedin"></i>
+                  <span>www.linkedin.com/in/jibintgeorge</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="footer-nav-wrapper">
+              <div class="row">
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Studio</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Our Story</a>
+                      <a href="#!">Design Process</a>
+                      <a href="#!">Portfolio</a>
+                      <a href="#!">Case Studies</a>
+                      <a href="#!">Awards</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Services</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Brand Identity</a>
+                      <a href="#!">Web Design</a>
+                      <a href="#!">Mobile Apps</a>
+                      <a href="#!">Digital Strategy</a>
+                      <a href="#!">Consultation</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Resources</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Design Blog</a>
+                      <a href="#!">Style Guide</a>
+                      <a href="#!">Free Assets</a>
+                      <a href="#!">Tutorials</a>
+                      <a href="#!">Inspiration</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Connect</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Start Project</a>
+                      <a href="#!">Schedule Call</a>
+                      <a href="#!">Join Newsletter</a>
+                      <a href="#!">Follow Updates</a>
+                      <a href="#!">Partnership</a>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="bottom-content" data-aos="fade-up" data-aos-delay="300">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="legal-links">
+                <a href="#!">Privacy Policy</a>
+                <a href="#!">Terms of Service</a>
+                <a href="#!">Cookie Policy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#!" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+  </a>
+
+  <!-- Preloader 
+  <div id="preloader"></div> -->
+
+ <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

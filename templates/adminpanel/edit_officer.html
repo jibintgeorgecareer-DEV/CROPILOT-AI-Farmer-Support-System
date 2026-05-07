@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+/* HEADER */
+.page-header{
+  background: linear-gradient(120deg,#1d3557,#457b9d);
+  border-radius: 18px;
+  padding: 25px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+/* GLASS CARD */
+.glass-card{
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(14px);
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.25);
+  box-shadow: 0 18px 45px rgba(0,0,0,.35);
+}
+
+/* INPUTS */
+.form-control{
+  border-radius: 12px;
+  padding: 12px;
+}
+</style>
+
+<!-- HEADER -->
+<div class="page-header mb-4">
+  <h3 class="fw-bold mb-0">
+    <i class="fas fa-user-edit"></i> Edit Agriculture Officer
+  </h3>
+  <small class="opacity-75">
+    Update officer details securely
+  </small>
+</div>
+
+<!-- FORM CARD -->
+<div class="glass-card p-4 col-lg-6">
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">
+        <i class="fas fa-user"></i> Username
+      </label>
+      <input name="username"
+             class="form-control"
+             value="{{ officer.user.username }}"
+             required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">
+        <i class="fas fa-map-marker-alt"></i> Region
+      </label>
+      <input name="region"
+             class="form-control"
+             value="{{ officer.region }}"
+             required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">
+        <i class="fas fa-graduation-cap"></i> Qualification
+      </label>
+      <input name="qualification"
+             class="form-control"
+             value="{{ officer.qualification }}"
+             required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">
+        <i class="fas fa-lock"></i> New Password (optional)
+      </label>
+      <input type="password"
+             name="password"
+             class="form-control"
+             placeholder="Leave blank to keep existing password">
+      <small class="text-muted">
+        Only fill this if you want to reset the password
+      </small>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="mt-4">
+      <button class="btn btn-success px-4">
+        <i class="fas fa-save"></i> Update Officer
+      </button>
+      <a href="/adminpanel/officers/"
+         class="btn btn-outline-secondary ms-2">
+        Cancel
+      </a>
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

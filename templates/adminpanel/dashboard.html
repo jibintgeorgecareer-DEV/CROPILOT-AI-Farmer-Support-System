@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* BACKGROUND */
+.admin-bg{
+  background:
+    linear-gradient(120deg, rgba(0,0,0,.65), rgba(0,0,0,.35)),
+    url("https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+  border-radius: 25px;
+  padding: 40px;
+}
+
+/* GLASS CARD */
+.glass-card{
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.25);
+  box-shadow: 0 15px 40px rgba(0,0,0,.35);
+  transition: transform .3s ease;
+}
+
+.glass-card:hover{
+  transform: translateY(-6px);
+}
+
+/* COUNTER */
+.counter{
+  font-size: 42px;
+  font-weight: 800;
+}
+
+/* STATUS DOT */
+.status-dot{
+  height:14px;
+  width:14px;
+  background:#00ff9d;
+  border-radius:50%;
+  display:inline-block;
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(0,255,157,.7);}
+  70%{box-shadow:0 0 0 15px rgba(0,255,157,0);}
+  100%{box-shadow:0 0 0 0 rgba(0,255,157,0);}
+}
+</style>
+
+<div class="admin-bg text-white">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">
+      <i class="fas fa-chart-line"></i> Admin Dashboard
+    </h2>
+    <div>
+      <span class="status-dot"></span>
+      <span class="ms-2 fw-semibold">AI Engine : ONLINE</span>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="row g-4 text-center">
+
+    <div class="col-md-3">
+      <div class="glass-card p-4">
+        <i class="fas fa-users fa-2x mb-2"></i>
+        <div class="counter" data-target="{{ farmer_count }}">0</div>
+        <p>Farmers</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="glass-card p-4">
+        <i class="fas fa-user-tie fa-2x mb-2"></i>
+        <div class="counter" data-target="{{ officer_count }}">0</div>
+        <p>Officers</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="glass-card p-4">
+        <i class="fas fa-seedling fa-2x mb-2"></i>
+        <div class="counter" data-target="{{ crop_count }}">0</div>
+        <p>Crops</p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="glass-card p-4">
+        <i class="fas fa-notes-medical fa-2x mb-2"></i>
+        <div class="counter" data-target="{{ report_count }}">0</div>
+        <p>Disease Reports</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CHARTS -->
+  <div class="row mt-5 g-4">
+
+    <div class="col-md-6">
+      <div class="glass-card p-4">
+        <h5>System Usage Overview</h5>
+        <canvas id="usageChart"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="glass-card p-4">
+        <h5>Disease Detection Trend</h5>
+        <canvas id="diseaseChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ================= JAVASCRIPT ================= -->
+<script>
+// ANIMATED COUNTERS
+document.querySelectorAll('.counter').forEach(counter=>{
+  let target=+counter.dataset.target;
+  let count=0;
+  let step=Math.ceil(target/40);
+
+  let interval=setInterval(()=>{
+    count+=step;
+    if(count>=target){
+      counter.innerText=target;
+      clearInterval(interval);
+    }else{
+      counter.innerText=count;
+    }
+  },40);
+});
+
+// CHART 1 – SYSTEM USAGE
+new Chart(document.getElementById('usageChart'),{
+  type:'bar',
+  data:{
+    labels:['Farmers','Officers','AI Requests','Reports'],
+    datasets:[{
+      data:[
+        {{ farmer_count }},
+        {{ officer_count }},
+        {{ report_count|add:20 }},
+        {{ report_count }}
+      ],
+      backgroundColor:['#00ff9d','#ffc107','#0dcaf0','#ff6b6b']
+    }]
+  }
+});
+
+// CHART 2 – DISEASE TREND
+new Chart(document.getElementById('diseaseChart'),{
+  type:'line',
+  data:{
+    labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    datasets:[{
+      label:'Detections',
+      data:[5,9,14,8,16,11,{{ report_count }}],
+      borderColor:'#00ff9d',
+      tension:.4
+    }]
+  }
+});
+</script>
+
+{% endblock %}

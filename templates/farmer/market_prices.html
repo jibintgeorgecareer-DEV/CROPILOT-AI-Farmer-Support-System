@@ -1,0 +1,712 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Cropilot - Market Prices</title>
+  <meta name="description" content="Live crop market prices">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/favicon.png' %}" rel="apple-touch-icon">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    /* ── Overview card wrapper (reused from disease_result) ── */
+    .result-overview-card {
+      background: var(--surface-color);
+      border-radius: 12px;
+      padding: 2rem 2.5rem;
+      border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+      margin-bottom: 1.75rem;
+      box-shadow: 0 4px 25px color-mix(in srgb, var(--default-color), transparent 92%);
+    }
+
+    /* ── Section sub-label (reused) ── */
+    .result-section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--default-color), transparent 45%);
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Gradient header card (reused pattern from disease-result-card) ── */
+    .market-header-card {
+      background: linear-gradient(135deg, var(--heading-color), var(--accent-color));
+      border-radius: 12px;
+      padding: 2rem 2.5rem;
+      color: #fff;
+      margin-bottom: 1.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .market-header-card::after {
+      content: '\F5CC'; /* bi-currency-rupee like icon */
+      font-family: 'Bootstrap Icons';
+      position: absolute;
+      right: -10px; top: -10px;
+      font-size: 130px;
+      opacity: 0.06;
+      line-height: 1;
+    }
+    .market-header-card .mh-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 0.5rem;
+    }
+    .market-header-card .mh-title {
+      font-family: var(--heading-font);
+      font-size: 2rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.35rem;
+      line-height: 1.2;
+    }
+    .market-header-card .mh-meta {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.875rem;
+      margin-bottom: 0;
+    }
+    .market-header-card .mh-icon {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      float: right; margin-top: -6px;
+    }
+
+    /* ── Search bar ── */
+    .market-search-wrap {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .market-search-wrap .bi-search {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: color-mix(in srgb, var(--default-color), transparent 45%);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+    .market-search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      border-radius: 10px;
+      border: 1px solid color-mix(in srgb, var(--default-color), transparent 80%);
+      background: var(--surface-color);
+      font-family: var(--default-font);
+      font-size: 0.95rem;
+      color: var(--default-color);
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .market-search-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color), transparent 82%);
+    }
+    .market-search-input::placeholder {
+      color: color-mix(in srgb, var(--default-color), transparent 55%);
+    }
+
+    /* ── Filter pills ── */
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0.3rem 0.85rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: 1px solid color-mix(in srgb, var(--default-color), transparent 78%);
+      background: var(--surface-color);
+      color: color-mix(in srgb, var(--default-color), transparent 25%);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--accent-color);
+      color: #fff;
+      border-color: var(--accent-color);
+    }
+
+    /* ── Market price table ── */
+    .market-table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
+    }
+    .market-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--default-font);
+      font-size: 0.9rem;
+    }
+    .market-table thead tr {
+      background: color-mix(in srgb, var(--accent-color), transparent 92%);
+    }
+    .market-table thead th {
+      padding: 0.9rem 1.25rem;
+      text-align: left;
+      font-family: var(--heading-font);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--default-color), transparent 30%);
+      border-bottom: 2px solid color-mix(in srgb, var(--accent-color), transparent 75%);
+      white-space: nowrap;
+    }
+    .market-table thead th i {
+      margin-right: 5px;
+      color: var(--accent-color);
+    }
+    .market-table tbody tr {
+      border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 92%);
+      transition: background 0.18s ease;
+    }
+    .market-table tbody tr:last-child { border-bottom: none; }
+    .market-table tbody tr:hover {
+      background: color-mix(in srgb, var(--accent-color), transparent 96%);
+    }
+    .market-table tbody td {
+      padding: 0.95rem 1.25rem;
+      color: var(--default-color);
+      vertical-align: middle;
+    }
+
+    /* ── Crop name cell ── */
+    .crop-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .crop-icon-badge {
+      width: 38px; height: 38px;
+      border-radius: 9px;
+      background: color-mix(in srgb, var(--accent-color), transparent 88%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .crop-name-main {
+      font-family: var(--heading-font);
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--heading-color);
+      display: block;
+    }
+    .crop-name-sub {
+      font-size: 0.78rem;
+      color: color-mix(in srgb, var(--default-color), transparent 48%);
+    }
+
+    /* ── Price cell ── */
+    .price-main {
+      font-family: var(--heading-font);
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--heading-color);
+    }
+    .price-unit {
+      font-size: 0.75rem;
+      color: color-mix(in srgb, var(--default-color), transparent 45%);
+      display: block;
+    }
+
+    /* ── Trend badge ── */
+    .trend-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.25rem 0.65rem;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .trend-up   { background: #e8f8ef; color: #1e7e34; }
+    .trend-down { background: #fdecea; color: #c0392b; }
+    .trend-flat { background: #fff3e0; color: #c97010; }
+
+    /* ── Date cell ── */
+    .date-cell {
+      font-size: 0.875rem;
+      color: color-mix(in srgb, var(--default-color), transparent 30%);
+      white-space: nowrap;
+    }
+    .date-cell small {
+      display: block;
+      font-size: 0.75rem;
+      color: color-mix(in srgb, var(--default-color), transparent 52%);
+    }
+
+    /* ── No results row ── */
+    .no-results-row td {
+      padding: 3rem 1.25rem;
+      text-align: center;
+      color: color-mix(in srgb, var(--default-color), transparent 45%);
+    }
+    .no-results-row .no-results-icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: color-mix(in srgb, var(--accent-color), transparent 55%);
+    }
+
+    /* ── Summary stat chips ── */
+    .stat-chip {
+      background: var(--surface-color);
+      border: 1px solid color-mix(in srgb, var(--default-color), transparent 88%);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      text-align: center;
+    }
+    .stat-chip .sc-val {
+      font-family: var(--heading-font);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      display: block;
+      line-height: 1;
+    }
+    .stat-chip .sc-label {
+      font-size: 0.78rem;
+      color: color-mix(in srgb, var(--default-color), transparent 45%);
+      margin-top: 0.35rem;
+      display: block;
+    }
+
+    /* ── Result count badge ── */
+    .result-count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: color-mix(in srgb, var(--accent-color), transparent 88%);
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.2rem 0.7rem;
+      border-radius: 50px;
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+
+<body class="department-details-page">
+
+  <!-- HEADER -->
+  <header id="header" class="header fixed-top">
+    <div class="branding d-flex align-items-center">
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'farmer_dashboard' %}" class="logo d-flex align-items-center">
+          <img src="{% static 'assets/img/favicon.png' %}" alt="">
+          <h1 class="sitename">Cropilot</h1>
+        </a>
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'farmer_dashboard' %}" class="active">Home</a></li>
+            <li><a href="{% url 'disease_detection' %}">Disease Detection</a></li>
+            <li><a href="{% url 'smart_soil' %}">Soil Recommendation</a></li>
+            <li><a href="{% url 'send_query' %}">Agri-Officers</a></li>
+            <li><a href="{% url 'farmer_market_prices' %}">Market Price</a></li>
+            <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="{% url 'submit_feedback' %}">Write Feedback</a></li>
+              <li><a href="{% url 'farmer_replies' %}">Officer Replies</a></li>
+              <li><a href="{% url 'farmer_crops' %}">Your Crops</a></li>
+              <li><a href="">Disease Results</a></li>
+              <li><a href="{% url 'farmer_profile' %}">Profile</a></li>
+              <li><a href="/logout/">Log Out</a></li>
+            </ul>
+            </li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- PAGE TITLE -->
+    <div class="page-title">
+      <div class="heading">
+        <div class="container">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1>Crop Market Prices</h1>
+              <p class="mb-0">
+                Daily updated market rates for major crops. Compare prices, track trends, and make informed selling decisions for your harvest.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="{% url 'farmer_dashboard' %}">Home</a></li>
+            <li class="current">Market Prices</li>
+          </ol>
+        </div>
+      </nav>
+    </div>
+
+    <!-- MAIN SECTION -->
+    <section id="department-details" class="department-details section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row justify-content-center">
+
+          <div class="col-lg-10">
+
+            <!-- 1. Header gradient card -->
+            <div class="market-header-card" data-aos="fade-up" data-aos-delay="150">
+              <div class="mh-icon"><i class="bi bi-bar-chart-line-fill"></i></div>
+              <div class="mh-label">Market Data</div>
+              <div class="mh-title">Today's Crop Prices</div>
+              <div class="mh-meta">
+                <i class="bi bi-clock me-1"></i> Updated: <span id="lastUpdated"></span>
+                &nbsp;·&nbsp;
+                <i class="bi bi-geo-alt me-1"></i>Kerala Rates
+                &nbsp;·&nbsp;
+                <i class="bi bi-currency-rupee me-1"></i>Price
+              </div>
+            </div>
+
+            
+            <!-- 3. Search + filter -->
+            <div class="result-overview-card" data-aos="fade-up" data-aos-delay="200">
+              <div class="result-section-label"><i class="bi bi-funnel me-1"></i>Search &amp; Filter</div>
+              <h3 style="font-family:var(--heading-font); font-size:1.15rem; font-weight:500; margin-bottom:1rem; color:var(--heading-color);">
+                Find a Crop
+                <span class="result-count-badge" id="resultBadge"><i class="bi bi-list-ul"></i><span id="resultCount">{{ crop_count }}</span> results</span>
+              </h3>
+
+              <!-- Search bar -->
+              <div class="market-search-wrap">
+                <i class="bi bi-search"></i>
+                <input
+                  type="text"
+                  class="market-search-input"
+                  id="cropSearch"
+                  placeholder="Search crop name (e.g. Rice, Tomato, Wheat…)"
+                  autocomplete="off"
+                >
+              </div>
+            </div>
+
+            <!-- 4. Price table -->
+            <div class="result-overview-card" data-aos="fade-up" data-aos-delay="250" style="padding: 1.5rem;">
+              <div class="result-section-label mb-3"><i class="bi bi-table me-1"></i>Price Listing</div>
+              <div class="market-table-wrap">
+                <table class="market-table" id="priceTable">
+                  <thead>
+                    <tr>
+                      <th><i class="bi bi-seedling"></i>Crop Name</th>
+                      <th><i class="bi bi-currency-rupee"></i>Price (₹/)</th>
+                      <th><i class="bi bi-arrow-left-right"></i>Change</th>
+                      <th><i class="bi bi-calendar3"></i>Date</th>
+                      <th><i class="bi bi-geo-alt"></i>Market</th>
+                    </tr>
+                  </thead>
+                  <tbody id="priceTableBody">
+                    <!-- Rows injected by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div><!-- /col-lg-10 -->
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="footer-16 footer position-relative">
+    <div class="container">
+      <div class="footer-main" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-start">
+          <div class="col-lg-5">
+            <div class="brand-section">
+              <a href="index.html" class="logo d-flex align-items-center mb-4">
+                <span class="sitename">Cropilot</span>
+              </a>
+              <p class="brand-description">This is my final-year BCA project.</p>
+              <div class="contact-info mt-5">
+                <div class="contact-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>Jibin T George</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-github"></i>
+                  <span>https://github.com/jibintgeorgecareer-DEV</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-linkedin"></i>
+                  <span>www.linkedin.com/in/jibintgeorge</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="footer-nav-wrapper">
+              <div class="row">
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Studio</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Our Story</a>
+                      <a href="#!">Design Process</a>
+                      <a href="#!">Portfolio</a>
+                      <a href="#!">Case Studies</a>
+                      <a href="#!">Awards</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Services</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Brand Identity</a>
+                      <a href="#!">Web Design</a>
+                      <a href="#!">Mobile Apps</a>
+                      <a href="#!">Digital Strategy</a>
+                      <a href="#!">Consultation</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Resources</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Design Blog</a>
+                      <a href="#!">Style Guide</a>
+                      <a href="#!">Free Assets</a>
+                      <a href="#!">Tutorials</a>
+                      <a href="#!">Inspiration</a>
+                    </nav>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="nav-column">
+                    <h6>Connect</h6>
+                    <nav class="footer-nav">
+                      <a href="#!">Start Project</a>
+                      <a href="#!">Schedule Call</a>
+                      <a href="#!">Join Newsletter</a>
+                      <a href="#!">Follow Updates</a>
+                      <a href="#!">Partnership</a>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="bottom-content" data-aos="fade-up" data-aos-delay="300">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="legal-links">
+                <a href="#!">Privacy Policy</a>
+                <a href="#!">Terms of Service</a>
+                <a href="#!">Cookie Policy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#!" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <script>
+  // ── Crop data from Django backend ─────────────────────────────────────
+  const crops = [
+  {% for p in prices %}
+  {
+    name: "{{ p.crop|escapejs }}",
+    category: "Crops",
+    emoji: "{{ p.emoji|default:'🌾'|escapejs }}",
+    price: {{ p.price|default:0 }},
+    change: -120,   // example numeric change
+    market: "Kerala",
+    date: "{{ p.date|date:'Y-m-d' }}" // We'll handle date formatting in JS
+  }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+];
+
+
+  const today = new Date();
+
+  // ── Date formatting helper ────────────────────────────────────────────
+  function fmt(dateStr) {
+    if (!dateStr) return 'N/A';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-IN', { 
+      day: '2-digit', 
+      month: 'short', 
+      year: 'numeric' 
+    });
+  }
+
+  // ── Trend Badge ───────────────────────────────────────────────────────
+  function trendBadge(change) {
+    if (change > 0) {
+      return `<span class="trend-badge trend-up"><i class="bi bi-arrow-up-short"></i>+₹${change.toLocaleString('en-IN')}</span>`;
+    }
+    if (change < 0) {
+      return `<span class="trend-badge trend-down"><i class="bi bi-arrow-down-short"></i>-₹${Math.abs(change).toLocaleString('en-IN')}</span>`;
+    }
+    return `<span class="trend-badge trend-flat"><i class="bi bi-dash"></i>Stable</span>`;
+  }
+
+  // ── Render single row ─────────────────────────────────────────────────
+  function renderRow(crop) {
+    const isToday = true; // You can enhance this logic based on actual date comparison if needed
+
+    return `
+      <tr data-category="${crop.category}" data-name="${crop.name.toLowerCase()}">
+        <td>
+          <div class="crop-cell">
+            <div class="crop-icon-badge">${crop.emoji}</div>
+            <div>
+              <span class="crop-name-main">${crop.name}</span>
+              <span class="crop-name-sub">${crop.category.charAt(0).toUpperCase() + crop.category.slice(1)}</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="price-main">₹${crop.price.toLocaleString('en-IN')}</span>
+          <span class="price-unit">per Quintal</span>
+        </td>
+        <td>${trendBadge(crop.change)}</td>
+        <td>
+          <span class="date-cell">
+            ${fmt(crop.date)}
+            <small>Today</small>
+          </span>
+        </td>
+        <td style="font-size:0.875rem; color:color-mix(in srgb, var(--default-color), transparent 25%);">
+          <i class="bi bi-geo-alt-fill me-1" style="color:var(--accent-color); font-size:0.75rem;"></i>${crop.market}
+        </td>
+      </tr>`;
+  }
+
+  // ── Update stats ──────────────────────────────────────────────────────
+  function updateStats(visible) {
+    let up = 0, down = 0, flat = 0;
+    visible.forEach(c => {
+      if (c.change > 0) up++;
+      else if (c.change < 0) down++;
+      else flat++;
+    });
+
+    document.getElementById('resultCount').textContent = visible.length;
+  }
+
+  // ── Render table ──────────────────────────────────────────────────────
+  function renderTable(data) {
+    const tbody = document.getElementById('priceTableBody');
+    
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr class="no-results-row"><td colspan="5">
+        <i class="bi bi-search no-results-icon"></i>
+        No crops found matching your search.<br>
+        <small>Try a different keyword or clear the filter.</small>
+      </td></tr>`;
+    } else {
+      tbody.innerHTML = data.map(renderRow).join('');
+    }
+    updateStats(data);
+  }
+
+  // ── Filter & Search logic ─────────────────────────────────────────────
+  let activeFilter = 'all';
+  let searchQuery = '';
+
+  function applyFilters() {
+    const filtered = crops.filter(c => {
+      const matchFilter = activeFilter === 'all' || c.category === activeFilter;
+      const matchSearch = c.name.toLowerCase().includes(searchQuery);
+      return matchFilter && matchSearch;
+    });
+    renderTable(filtered);
+  }
+
+  // Search input
+  document.getElementById('cropSearch').addEventListener('input', function () {
+    searchQuery = this.value.trim().toLowerCase();
+    applyFilters();
+  });
+
+  // Filter pills (if you add them later)
+  document.querySelectorAll('.filter-pill').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      activeFilter = this.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  // ── Initialize ────────────────────────────────────────────────────────
+  window.addEventListener('load', function () {
+    // Set last updated time
+    document.getElementById('lastUpdated').textContent = 
+      today.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + 
+      ', ' + today.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+    // Initial render with data from Django
+    renderTable(crops);
+  });
+</script>
+
+</body>
+</html>

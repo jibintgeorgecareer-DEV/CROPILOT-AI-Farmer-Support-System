@@ -1,0 +1,535 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Cropilot - My Crops</title>
+  <meta name="description" content="View and manage your crops">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/favicon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    /* ── Add Crop Card ── */
+    .add-crop-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2rem 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .add-crop-card h5 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      color: #1a3a5c;
+      margin-bottom: 1.2rem;
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+    }
+
+    .add-crop-card .input-group .form-control {
+      border-radius: 8px 0 0 8px;
+      border: 1.5px solid #c5d8ef;
+      padding: 0.65rem 1rem;
+      font-size: 0.97rem;
+      color: #333;
+      transition: border-color 0.2s;
+    }
+
+    .add-crop-card .input-group .form-control:focus {
+      border-color: #1976d2;
+      box-shadow: 0 0 0 3px rgba(25,118,210,0.12);
+      outline: none;
+    }
+
+    .add-crop-card .input-group .form-control::placeholder {
+      color: #a0b4cc;
+    }
+
+    .btn-add-crop {
+      background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+      color: #fff;
+      border: none;
+      border-radius: 0 8px 8px 0;
+      padding: 0.65rem 1.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-add-crop:hover {
+      background: linear-gradient(135deg, #1565c0 0%, #002171 100%);
+      box-shadow: 0 4px 12px rgba(13,71,161,0.28);
+      transform: translateY(-1px);
+      color: #fff;
+    }
+
+    .btn-add-crop i {
+      font-size: 1rem;
+    }
+
+    /* ── Crops Table Card ── */
+    .crops-table-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 2rem 2.5rem;
+    }
+
+    .crops-table-card h5 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      color: #1a3a5c;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+    }
+
+    .crops-table-card .badge-count {
+      background: linear-gradient(135deg, #1976d2, #0d47a1);
+      color: #fff;
+      border-radius: 20px;
+      padding: 0.2em 0.75em;
+      font-size: 0.82rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .table-crops {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .table-crops thead tr th {
+      background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.9rem 1.2rem;
+      border: none;
+    }
+
+    .table-crops thead tr th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    .table-crops thead tr th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    .table-crops tbody tr {
+      transition: background 0.15s;
+    }
+
+    .table-crops tbody tr:nth-child(even) {
+      background: #f0f6ff;
+    }
+
+    .table-crops tbody tr:hover {
+      background: #ddeeff;
+    }
+
+    .table-crops tbody td {
+      padding: 0.85rem 1.2rem;
+      border-bottom: 1px solid #dce8f7;
+      font-size: 0.96rem;
+      color: #3a3a3a;
+      vertical-align: middle;
+    }
+
+    .table-crops tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Crop name pill */
+    .crop-name-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: #e3f0fb;
+      color: #0d47a1;
+      border-radius: 20px;
+      padding: 0.25em 0.9em;
+      font-weight: 600;
+      font-size: 0.93rem;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .crop-name-pill i {
+      font-size: 0.85rem;
+      color: #1976d2;
+    }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 0.22em 0.85em;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    .status-active {
+      background: #e3f0fb;
+      color: #0d47a1;
+      border: 1px solid #90caf9;
+    }
+
+    .status-inactive {
+      background: #fff3e0;
+      color: #e65100;
+      border: 1px solid #ffcc80;
+    }
+
+    /* Action buttons */
+    .btn-action {
+      border: none;
+      background: none;
+      padding: 0.3rem 0.55rem;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s, transform 0.12s;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .btn-action-delete {
+      color: #e53935;
+    }
+
+    .btn-action-delete:hover {
+      background: #ffebee;
+      color: #b71c1c;
+      transform: scale(1.15);
+    }
+
+    .btn-action-edit {
+      color: #1976d2;
+    }
+
+    .btn-action-edit:hover {
+      background: #e3f2fd;
+      color: #0d47a1;
+      transform: scale(1.15);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #a0b8a4;
+    }
+
+    .empty-state i {
+      font-size: 3.5rem;
+      color: #90caf9;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .empty-state p {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      color: #7a9ec0;
+    }
+
+    /* Alert messages */
+    .crop-alert {
+      border-radius: 8px;
+      font-size: 0.93rem;
+      font-family: 'Montserrat', sans-serif;
+      margin-bottom: 1rem;
+    }
+
+    /* Serial number column */
+    .col-sl {
+      width: 60px;
+      text-align: center;
+      color: #8daa91;
+      font-weight: 600;
+    }
+
+    .col-actions {
+      width: 110px;
+      text-align: center;
+    }
+
+    /* Table wrapper for horizontal scroll on mobile */
+    .table-responsive-crops {
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body class="departments-page">
+
+  <header id="header" class="header fixed-top">
+    <div class="branding d-flex align-items-center">
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'farmer_dashboard' %}" class="logo d-flex align-items-center">
+          <img src="{% static 'assets/img/favicon.png' %}" alt="">
+          <h1 class="sitename">Cropilot</h1>
+        </a>
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'farmer_dashboard' %}" class="active">Home</a></li>
+            <li><a href="{% url 'disease_detection' %}">Disease Detection</a></li>
+            <li><a href="{% url 'smart_soil' %}">Soil Recommendation</a></li>
+            <li><a href="{% url 'send_query' %}">Agri-Officers</a></li>
+            <li><a href="{% url 'farmer_market_prices' %}">Market Price</a></li>
+            <li class="dropdown"><a href="#"><span>More Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="{% url 'submit_feedback' %}">Write Feedback</a></li>
+              <li><a href="{% url 'farmer_replies' %}">Officer Replies</a></li>
+              <li><a href="{% url 'farmer_crops' %}">Your Crops</a></li>
+              <li><a href="">Disease Results</a></li>
+              <li><a href="{% url 'farmer_profile' %}">Profile</a></li>
+              <li><a href="/logout/">Log Out</a></li>
+            </ul>
+            </li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title">
+      <div class="heading">
+        <div class="container">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1 class="heading-title">My Crops</h1>
+              <p class="mb-0">Manage and track all your registered crops</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="{% url 'farmer_dashboard' %}">Home</a></li>
+            <li class="current">My Crops</li>
+          </ol>
+        </div>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <!-- Crops Section -->
+    <section class="contact section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-xl-9">
+
+            <!-- Success / Error Messages -->
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} crop-alert alert-dismissible fade show" role="alert">
+                  <i class="bi {% if message.tags == 'error' %}bi-exclamation-circle{% else %}bi-check-circle{% endif %} me-2"></i>
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <!-- Add Crop Card -->
+            <div class="add-crop-card" data-aos="fade-up" data-aos-delay="150">
+              <h5><i class="bi bi-plus-circle-fill me-2" style="color:#1976d2;"></i>Add a New Crop</h5>
+              <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_crop">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="cropname"
+                    id="crop_name"
+                    placeholder="e.g. Paddy, Tomato, Banana, Coconut…"
+                    required
+                    autocomplete="off"
+                  >
+                  <button type="submit" class="btn btn-add-crop">
+                    <i class="bi bi-plus-lg me-1"></i> Add Crop
+                  </button>
+                </div>
+                <div class="form-text mt-2" style="color:#7a9ec0; font-size:0.84rem;">
+                  Enter the crop name and click <strong>Add Crop</strong> to register it to your profile.
+                </div>
+              </form>
+            </div>
+
+            <!-- Crops Table Card -->
+            <div class="crops-table-card" data-aos="fade-up" data-aos-delay="200">
+              <h5>
+                <i class="bi bi-table me-2" style="color:#1976d2;"></i>
+                Your Registered Crops
+                <span class="badge-count">{{ crops|length }}</span>
+              </h5>
+
+              {% if crops %}
+                <div class="table-responsive-crops">
+                  <table class="table-crops">
+                    <thead>
+                      <tr>
+                        <th class="col-sl">#</th>
+                        <th>Crop Name</th>
+                        <th>Date Added</th>
+                        <th class="col-actions">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for crop in crops %}
+                      <tr>
+                        <td class="col-sl">{{ forloop.counter }}</td>
+                        <td>
+                          <span class="crop-name-pill">
+                            <i class="bi bi-flower1"></i>
+                            {{ crop.name }}
+                          </span>
+                        </td>
+                        <td>
+                          <span style="color:#4a6080; font-size:0.92rem;">
+                            <i class="bi bi-calendar3 me-1" style="color:#90caf9;"></i>
+                            {{ crop.created_at|date:"d M Y" }}
+                          </span>
+                        </td>
+                        
+                        <td class="col-actions">
+                          <!-- Edit -->
+                          <a href="" class="btn-action btn-action-edit" title="Edit">
+                            <i class="bi bi-pencil-square"></i>
+                          </a>
+                          <!-- Delete -->
+                          <form action="" method="post" class="d-inline" onsubmit="return confirm('Remove {{ crop.name }} from your crops?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-action btn-action-delete" title="Delete">
+                              <i class="bi bi-trash3"></i>
+                            </button>
+                          </form>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+              {% else %}
+                <!-- Empty State -->
+                <div class="empty-state">
+                  <i class="bi bi-flower2"></i>
+                  <p>You haven't added any crops yet.<br>Use the form above to get started!</p>
+                </div>
+              {% endif %}
+
+            </div><!-- end crops-table-card -->
+
+            <!-- Note -->
+            <div class="text-center mt-4">
+              <small class="text-muted">
+                Your crop list is visible to agriculture officers who assist you with recommendations and advice.
+              </small>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer id="footer" class="footer-16 footer position-relative">
+    <div class="container">
+      <div class="footer-main" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-start">
+          <div class="col-lg-5">
+            <div class="brand-section">
+              <a href="index.html" class="logo d-flex align-items-center mb-4">
+                <span class="sitename">Cropilot</span>
+              </a>
+              <p class="brand-description">This is my final-year BCA project.</p>
+              <div class="contact-info mt-5">
+                <div class="contact-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>Jibin T George</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-github"></i>
+                  <span>https://github.com/jibintgeorgecareer-DEV</span>
+                </div>
+                <div class="contact-item">
+                  <i class="bi bi-linkedin"></i>
+                  <span>www.linkedin.com/in/jibintgeorge</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="bottom-content" data-aos="fade-up" data-aos-delay="300">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="legal-links">
+                <a href="#!">Privacy Policy</a>
+                <a href="#!">Terms of Service</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#!" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+  </a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>
